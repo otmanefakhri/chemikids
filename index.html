@@ -1067,6 +1067,10 @@ function flipMemCard(card) {
 buildElements();
 buildExperiments();
 buildFakten();
+// Make sure quiz-game is visible by default
+document.getElementById('quiz-game').style.display = 'block';
+document.getElementById('memory-section').style.display = 'none';
+startQuiz();
 </script>
 
 <!-- ════════════ COOKIE BANNER ════════════ -->
