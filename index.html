@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ChemiKids">
+<meta name="theme-color" content="#7F77DD">
+<title>ChemiKids – Chemie entdecken!</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3111839755470013" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --purple: #7F77DD;
+  --purple-dark: #534AB7;
+  --purple-darker: #3C3489;
+  --purple-light: #EEEDFE;
+  --purple-border: #AFA9EC;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --teal-border: #5DCAA5;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --coral-border: #F0997B;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --amber-border: #FAC775;
+  --bg: #f0eeff;
+  --white: #ffffff;
+  --text: #1e1a3c;
+  --muted: #64748b;
+  --border: #e2deff;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ── APP SHELL ── */
+.app-shell {
+  max-width: 430px;
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+
+/* ── SCROLLABLE CONTENT ── */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── TOP BAR ── */
+.topbar {
+  background: linear-gradient(160deg, var(--purple) 0%, var(--purple-dark) 100%);
+  padding: 52px 20px 20px;
+  flex-shrink: 0;
+}
+.topbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.topbar h1 { font-family: 'Fredoka One', cursive; font-size: 22px; color: #fff; flex: 1; }
+.icon-btn {
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: none; color: #fff; font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ── HOME SCREEN ── */
+.home-hero {
+  background: linear-gradient(160deg, var(--purple) 0%, var(--purple-dark) 60%, var(--purple-darker) 100%);
+  padding: 52px 24px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.bubbles { position: absolute; inset: 0; pointer-events: none; }
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.mascot {
+  width: 90px; height: 90px;
+  background: #fff;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+  position: relative; z-index: 1;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.home-hero h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 30px; color: #fff;
+  position: relative; z-index: 1;
+}
+.home-hero p {
+  font-size: 14px; color: rgba(255,255,255,0.85);
+  margin-top: 6px;
+  position: relative; z-index: 1;
+}
+.streak-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50px; padding: 7px 16px;
+  margin-top: 14px; color: #fff; font-size: 13px; font-weight: 700;
+  position: relative; z-index: 1;
+}
+
+.home-content { padding: 18px 16px 16px; }
+.section-label {
+  font-size: 11px; font-weight: 800;
+  color: var(--purple-dark);
+  text-transform: uppercase; letter-spacing: 1.2px;
+  margin-bottom: 10px; padding-left: 2px;
+}
+
+/* Daily card */
+.daily-card {
+  background: linear-gradient(135deg, #FAC775, #EF9F27);
+  border-radius: 20px; padding: 16px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.daily-card:active { transform: scale(0.97); }
+.daily-icon {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.daily-text h3 { font-size: 14px; font-weight: 800; color: #412402; }
+.daily-text p { font-size: 12px; color: #633806; margin-top: 3px; line-height: 1.45; }
+
+/* Menu grid */
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.menu-card {
+  border-radius: 20px; padding: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer; transition: transform 0.15s;
+  border: 0.5px solid transparent;
+}
+.menu-card:active { transform: scale(0.95); }
+.menu-card .card-icon { font-size: 30px; }
+.menu-card h3 { font-size: 14px; font-weight: 800; }
+.menu-card p { font-size: 11px; line-height: 1.4; }
+.menu-card.purple { background: var(--purple-light); border-color: var(--purple-border); }
+.menu-card.purple h3 { color: var(--purple-darker); }
+.menu-card.purple p { color: var(--purple-dark); }
+.menu-card.teal { background: var(--teal-light); border-color: var(--teal-border); }
+.menu-card.teal h3 { color: #085041; }
+.menu-card.teal p { color: var(--teal); }
+.menu-card.coral { background: var(--coral-light); border-color: var(--coral-border); }
+.menu-card.coral h3 { color: #4A1B0C; }
+.menu-card.coral p { color: var(--coral); }
+.menu-card.amber { background: var(--amber-light); border-color: var(--amber-border); }
+.menu-card.amber h3 { color: #412402; }
+.menu-card.amber p { color: var(--amber); }
+
+/* Badges */
+.badges-card {
+  background: var(--white);
+  border-radius: 20px; padding: 16px;
+  border: 0.5px solid var(--border);
+  margin-bottom: 16px;
+}
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.badge-item {
+  background: var(--purple-light);
+  border-radius: 50px; padding: 5px 12px;
+  font-size: 12px; color: var(--purple-darker); font-weight: 700;
+}
+.badge-item.locked { background: #f1f0f0; color: #aaa; }
+
+/* ── PERIODENSYSTEM ── */
+.filter-row {
+  display: flex; gap: 8px;
+  overflow-x: auto; padding: 12px 16px 8px;
+  scrollbar-width: none; flex-shrink: 0;
+  background: var(--bg);
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-pill {
+  flex-shrink: 0; padding: 7px 16px;
+  border-radius: 50px; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: 0.5px solid var(--border);
+  background: var(--white); color: var(--muted);
+  transition: all 0.15s;
+}
+.filter-pill.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+.legend {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding: 4px 16px 8px; flex-shrink: 0;
+}
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); font-weight: 600; }
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+.elements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; padding: 8px 14px 16px;
+}
+.el {
+  border-radius: 14px; padding: 10px 6px;
+  text-align: center; cursor: pointer;
+  transition: transform 0.15s;
+  border: 0.5px solid transparent;
+}
+.el:active { transform: scale(0.92); }
+.el .e-num { font-size: 10px; font-weight: 700; opacity: 0.7; }
+.el .e-sym { font-size: 20px; font-weight: 800; margin: 2px 0; }
+.el .e-name { font-size: 9px; font-weight: 600; }
+.el.nichtmetal { background: var(--teal-light); border-color: var(--teal-border); }
+.el.nichtmetal .e-num, .el.nichtmetal .e-sym, .el.nichtmetal .e-name { color: #085041; }
+.el.metall { background: var(--purple-light); border-color: var(--purple-border); }
+.el.metall .e-num, .el.metall .e-sym, .el.metall .e-name { color: var(--purple-darker); }
+.el.edelgas { background: var(--coral-light); border-color: var(--coral-border); }
+.el.edelgas .e-num, .el.edelgas .e-sym, .el.edelgas .e-name { color: #4A1B0C; }
+.el.halbmetal { background: var(--amber-light); border-color: var(--amber-border); }
+.el.halbmetal .e-num, .el.halbmetal .e-sym, .el.halbmetal .e-name { color: #412402; }
+.el.hidden { display: none; }
+
+/* ── EXPERIMENTE ── */
+.exp-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.exp-card {
+  border-radius: 20px; padding: 18px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: transform 0.15s;
+  border: 0.5px solid transparent;
+}
+.exp-card:active { transform: scale(0.97); }
+.exp-icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; flex-shrink: 0;
+}
+.exp-info h3 { font-size: 15px; font-weight: 800; }
+.exp-info p { font-size: 12px; margin-top: 3px; line-height: 1.4; }
+.exp-arrow { margin-left: auto; font-size: 18px; flex-shrink: 0; }
+.exp-card.e1 { background: #fff3e0; border-color: #FFB74D; }
+.exp-card.e1 .exp-icon { background: rgba(255,183,77,0.3); }
+.exp-card.e1 h3 { color: #E65100; }
+.exp-card.e1 p { color: #BF360C; }
+.exp-card.e2 { background: #e3f2fd; border-color: #64B5F6; }
+.exp-card.e2 .exp-icon { background: rgba(100,181,246,0.3); }
+.exp-card.e2 h3 { color: #0D47A1; }
+.exp-card.e2 p { color: #1565C0; }
+.exp-card.e3 { background: #f3e5f5; border-color: #CE93D8; }
+.exp-card.e3 .exp-icon { background: rgba(206,147,216,0.3); }
+.exp-card.e3 h3 { color: #4A148C; }
+.exp-card.e3 p { color: #6A1B9A; }
+.exp-card.e4 { background: #e8f5e9; border-color: #81C784; }
+.exp-card.e4 .exp-icon { background: rgba(129,199,132,0.3); }
+.exp-card.e4 h3 { color: #1B5E20; }
+.exp-card.e4 p { color: #2E7D32; }
+.exp-card.e5 { background: #fce4ec; border-color: #F48FB1; }
+.exp-card.e5 .exp-icon { background: rgba(244,143,177,0.3); }
+.exp-card.e5 h3 { color: #880E4F; }
+.exp-card.e5 p { color: #AD1457; }
+.exp-card.e6 { background: #e0f7fa; border-color: #4DD0E1; }
+.exp-card.e6 .exp-icon { background: rgba(77,208,225,0.3); }
+.exp-card.e6 h3 { color: #006064; }
+.exp-card.e6 p { color: #00838F; }
+
+/* ── QUIZ ── */
+.quiz-content { padding: 20px 16px; }
+.quiz-progress-bar-bg {
+  background: var(--border); border-radius: 50px;
+  height: 8px; margin-bottom: 20px; overflow: hidden;
+}
+.quiz-progress-bar-fill {
+  background: linear-gradient(90deg, var(--purple), var(--teal-border));
+  height: 100%; border-radius: 50px;
+  transition: width 0.4s ease;
+}
+.quiz-score-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.quiz-score { font-size: 13px; color: var(--muted); font-weight: 700; }
+.quiz-q-num { font-size: 13px; color: var(--purple); font-weight: 800; }
+.question-card {
+  background: var(--white); border-radius: 24px;
+  padding: 24px; margin-bottom: 16px;
+  border: 0.5px solid var(--border);
+  text-align: center;
+}
+.question-emoji { font-size: 48px; margin-bottom: 14px; }
+.question-text { font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.4; }
+.answers-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.answer-btn {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 14px 18px;
+  font-size: 14px; font-weight: 700; color: var(--text);
+  cursor: pointer; text-align: left;
+  transition: all 0.15s; font-family: 'Nunito', sans-serif;
+  display: flex; align-items: center; gap: 10px;
+}
+.answer-btn:active { transform: scale(0.98); }
+.answer-btn.correct { background: var(--teal-light); border-color: var(--teal-border); color: #085041; }
+.answer-btn.wrong { background: var(--coral-light); border-color: var(--coral-border); color: #4A1B0C; }
+.answer-letter {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+  color: var(--purple);
+}
+.answer-btn.correct .answer-letter { background: var(--teal-border); color: #fff; }
+.answer-btn.wrong .answer-letter { background: var(--coral-border); color: #fff; }
+.next-btn {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  border: none; border-radius: 50px; color: #fff;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  display: none;
+  transition: transform 0.15s;
+}
+.next-btn:active { transform: scale(0.97); }
+.next-btn.show { display: block; }
+
+.quiz-result {
+  text-align: center; padding: 30px 20px;
+  display: none; flex-direction: column; align-items: center; gap: 14px;
+}
+.quiz-result.show { display: flex; }
+.result-emoji { font-size: 72px; animation: pop 0.4s ease; }
+@keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.result-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--purple); }
+.result-score { font-size: 16px; color: var(--muted); font-weight: 700; }
+.restart-btn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  border: none; border-radius: 50px; color: #fff;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif; margin-top: 10px;
+}
+
+/* ── FAKTEN ── */
+.fakten-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.fakt-card {
+  background: var(--white); border-radius: 20px;
+  padding: 18px; border: 0.5px solid var(--border);
+  cursor: pointer; transition: transform 0.15s;
+}
+.fakt-card:active { transform: scale(0.98); }
+.fakt-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.fakt-icon { font-size: 28px; }
+.fakt-cat {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; padding: 3px 10px; border-radius: 50px;
+}
+.fakt-cat.alltag { background: var(--amber-light); color: var(--amber); }
+.fakt-cat.koerper { background: var(--teal-light); color: var(--teal); }
+.fakt-cat.natur { background: #e8f5e9; color: #1B5E20; }
+.fakt-cat.technik { background: var(--purple-light); color: var(--purple-darker); }
+.fakt-card h3 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.fakt-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+/* ── OVERLAY / DETAIL ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(30,26,60,0.6);
+  z-index: 200;
+  display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.overlay.show { display: flex; }
+.detail-sheet {
+  background: var(--white);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 22px 40px;
+  width: 100%; max-width: 430px;
+  animation: slideUp 0.3s ease;
+  max-height: 80dvh;
+  overflow-y: auto;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border); border-radius: 50px;
+  margin: 0 auto 20px;
+}
+.detail-badge-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.detail-el-badge {
+  width: 68px; height: 68px; border-radius: 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.detail-el-badge .d-num { font-size: 11px; font-weight: 800; }
+.detail-el-badge .d-sym { font-size: 26px; font-weight: 800; }
+.detail-el-info h2 { font-size: 20px; font-weight: 800; color: var(--text); }
+.detail-el-info p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.fact-row { background: var(--bg); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+.fact-row h4 { font-size: 11px; font-weight: 800; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.fact-row p { font-size: 14px; color: var(--text); line-height: 1.55; }
+.close-sheet-btn {
+  width: 100%; padding: 15px; margin-top: 6px;
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  border: none; border-radius: 50px; color: #fff;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Experiment detail */
+.exp-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+.step-item { display: flex; gap: 12px; align-items: flex-start; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--purple-light); color: var(--purple-darker);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+
+/* ── MEMORY GAME ── */
+.memory-section { padding: 16px; }
+.memory-title { font-size: 15px; font-weight: 800; color: var(--purple-darker); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.memory-stats { display: flex; gap: 10px; margin-bottom: 14px; }
+.memory-stat { background: var(--white); border: 0.5px solid var(--border); border-radius: 50px; padding: 5px 14px; font-size: 12px; color: var(--muted); font-weight: 700; }
+.memory-stat span { color: var(--text); }
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.mem-card { aspect-ratio: 1; border-radius: 14px; cursor: pointer; position: relative; }
+.mem-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.35s; border-radius: 14px; }
+.mem-card.flipped .mem-card-inner { transform: rotateY(180deg); }
+.mem-front, .mem-back { position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 0.5px solid transparent; }
+.mem-front { background: var(--purple); }
+.mem-front-icon { font-size: 24px; }
+.mem-back { background: var(--white); border-color: var(--border); transform: rotateY(180deg); padding: 4px; text-align: center; }
+.mem-back .m-emoji { font-size: 22px; line-height: 1; }
+.mem-back .m-label { font-size: 9px; font-weight: 800; color: var(--muted); margin-top: 3px; line-height: 1.2; }
+.mem-card.matched .mem-front { background: var(--teal-light); }
+.mem-card.matched .mem-back { background: var(--teal-light); border-color: var(--teal-border); }
+.mem-card.matched .mem-back .m-label { color: #085041; }
+.mem-restart { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--purple), var(--purple-dark)); border: none; border-radius: 50px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; font-family: 'Nunito', sans-serif; }
+.mem-win { text-align: center; padding: 20px 10px; display: none; }
+.mem-win.show { display: block; }
+.mem-win-emoji { font-size: 52px; }
+.mem-win-title { font-size: 20px; font-weight: 800; color: var(--purple-darker); margin-top: 10px; }
+.mem-win-sub { font-size: 13px; color: var(--muted); margin-top: 6px; margin-bottom: 16px; }
+.game-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.game-tab { flex: 1; padding: 10px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 800; color: var(--muted); cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.15s; }
+.game-tab.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+/* ── AD BANNER ── */
+.ad-banner {
+  background: var(--white); border-top: 0.5px solid var(--border);
+  padding: 8px; text-align: center;
+  font-size: 10px; color: var(--muted); flex-shrink: 0;
+}
+
+/* ── TAB BAR ── */
+.tabbar {
+  height: 72px; background: var(--white);
+  border-top: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-around;
+  padding-bottom: 8px; flex-shrink: 0;
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; cursor: pointer; padding: 4px 12px;
+  border: none; background: none; font-family: 'Nunito', sans-serif;
+}
+.tab-icon { font-size: 22px; }
+.tab-label { font-size: 10px; color: var(--muted); font-weight: 700; }
+.tab-item.active .tab-label { color: var(--purple); }
+.tab-item.active .tab-icon { filter: saturate(2); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ════════════════════ HOME SCREEN ════════════════════ -->
+  <div class="screen active" id="screen-home">
+    <div class="home-hero">
+      <div class="bubbles">
+        <div class="bubble" style="width:100px;height:100px;top:-20px;left:-20px"></div>
+        <div class="bubble" style="width:70px;height:70px;top:20px;right:30px"></div>
+        <div class="bubble" style="width:50px;height:50px;bottom:30px;left:50px"></div>
+      </div>
+      <div class="mascot">🧪</div>
+      <h1>ChemiKids</h1>
+      <p>Chemie entdecken — spielerisch &amp; einfach</p>
+      <div class="streak-badge">🔥 3 Tage Streak — weiter so!</div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="home-content">
+        <div class="section-label">Fakt des Tages</div>
+        <div class="daily-card" onclick="goTo('fakten')">
+          <div class="daily-icon">💧</div>
+          <div class="daily-text">
+            <h3>Warum ist Wasser nass?</h3>
+            <p>Wasser klammert sich mit winzigen Teilchen ans Ding — so fühlt sich „nass" an!</p>
+          </div>
+        </div>
+
+        <div class="section-label">Was möchtest du entdecken?</div>
+        <div class="menu-grid">
+          <div class="menu-card purple" onclick="goTo('periodensystem')">
+            <div class="card-icon">⚗️</div>
+            <h3>Periodensystem</h3>
+            <p>118 Elemente spielerisch entdecken</p>
+          </div>
+          <div class="menu-card teal" onclick="goTo('experimente')">
+            <div class="card-icon">🔥</div>
+            <h3>Experimente</h3>
+            <p>Feuer, Wasser, Luft &amp; mehr</p>
+          </div>
+          <div class="menu-card coral" onclick="goTo('quiz')">
+            <div class="card-icon">🎮</div>
+            <h3>Quiz &amp; Spiele</h3>
+            <p>Punkte sammeln, Abzeichen gewinnen</p>
+          </div>
+          <div class="menu-card amber" onclick="goTo('fakten')">
+            <div class="card-icon">💡</div>
+            <h3>Chemie-Fakten</h3>
+            <p>Alltagschemie kinderleicht erklärt</p>
+          </div>
+        </div>
+
+        <div class="section-label">Meine Abzeichen</div>
+        <div class="badges-card">
+          <div class="badges">
+            <span class="badge-item">🥇 Erste Schritte</span>
+            <span class="badge-item">🔬 Neugierig</span>
+            <span class="badge-item locked">🏆 Quiz-Meister</span>
+            <span class="badge-item locked">⭐ Alle Elemente</span>
+            <span class="badge-item locked">🧪 Forscher</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ad-banner">Werbung · kindgerecht &amp; DSGVO-konform &nbsp;|&nbsp; <a onclick="showLegal('impressum')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Impressum</a> &nbsp;·&nbsp; <a onclick="showLegal('datenschutz')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Datenschutz</a></div>
+    <div class="tabbar" id="tabbar-home">
+      <button class="tab-item active" onclick="goTo('home')"><div class="tab-icon">🏠</div><span class="tab-label">Start</span></button>
+      <button class="tab-item" onclick="goTo('periodensystem')"><div class="tab-icon">⚗️</div><span class="tab-label">Elemente</span></button>
+      <button class="tab-item" onclick="goTo('quiz')"><div class="tab-icon">🎮</div><span class="tab-label">Quiz</span></button>
+      <button class="tab-item" onclick="goTo('fakten')"><div class="tab-icon">💡</div><span class="tab-label">Fakten</span></button>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PERIODENSYSTEM ════════════════════ -->
+  <div class="screen" id="screen-periodensystem">
+    <div class="topbar">
+      <div class="topbar-row">
+        <button class="icon-btn" onclick="goTo('home')">←</button>
+        <h1>Periodensystem</h1>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-pill active" onclick="filterEl('all',this)">Alle</div>
+      <div class="filter-pill" onclick="filterEl('nichtmetal',this)">Nichtmetalle</div>
+      <div class="filter-pill" onclick="filterEl('metall',this)">Metalle</div>
+      <div class="filter-pill" onclick="filterEl('edelgas',this)">Edelgase</div>
+      <div class="filter-pill" onclick="filterEl('halbmetal',this)">Halbmetalle</div>
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Nichtmetall</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7F77DD"></div>Metall</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#F0997B"></div>Edelgas</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#FAC775"></div>Halbmetall</div>
+    </div>
+    <div class="scroll-area">
+      <div class="elements-grid" id="elements-grid"></div>
+    </div>
+    <div class="ad-banner">Werbung · kindgerecht &amp; DSGVO-konform &nbsp;|&nbsp; <a onclick="showLegal('impressum')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Impressum</a> &nbsp;·&nbsp; <a onclick="showLegal('datenschutz')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Datenschutz</a></div>
+    <div class="tabbar">
+      <button class="tab-item" onclick="goTo('home')"><div class="tab-icon">🏠</div><span class="tab-label">Start</span></button>
+      <button class="tab-item active" onclick="goTo('periodensystem')"><div class="tab-icon">⚗️</div><span class="tab-label">Elemente</span></button>
+      <button class="tab-item" onclick="goTo('quiz')"><div class="tab-icon">🎮</div><span class="tab-label">Quiz</span></button>
+      <button class="tab-item" onclick="goTo('fakten')"><div class="tab-icon">💡</div><span class="tab-label">Fakten</span></button>
+    </div>
+  </div>
+
+  <!-- ════════════════════ EXPERIMENTE ════════════════════ -->
+  <div class="screen" id="screen-experimente">
+    <div class="topbar">
+      <div class="topbar-row">
+        <button class="icon-btn" onclick="goTo('home')">←</button>
+        <h1>Experimente</h1>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="exp-list" id="exp-list"></div>
+    </div>
+    <div class="ad-banner">Werbung · kindgerecht &amp; DSGVO-konform &nbsp;|&nbsp; <a onclick="showLegal('impressum')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Impressum</a> &nbsp;·&nbsp; <a onclick="showLegal('datenschutz')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Datenschutz</a></div>
+    <div class="tabbar">
+      <button class="tab-item" onclick="goTo('home')"><div class="tab-icon">🏠</div><span class="tab-label">Start</span></button>
+      <button class="tab-item" onclick="goTo('periodensystem')"><div class="tab-icon">⚗️</div><span class="tab-label">Elemente</span></button>
+      <button class="tab-item" onclick="goTo('quiz')"><div class="tab-icon">🎮</div><span class="tab-label">Quiz</span></button>
+      <button class="tab-item" onclick="goTo('fakten')"><div class="tab-icon">💡</div><span class="tab-label">Fakten</span></button>
+    </div>
+  </div>
+
+  <!-- ════════════════════ QUIZ ════════════════════ -->
+  <div class="screen" id="screen-quiz">
+    <div class="topbar">
+      <div class="topbar-row">
+        <button class="icon-btn" onclick="goTo('home')">←</button>
+        <h1>Quiz &amp; Spiele</h1>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="quiz-content">        <div style="height:16px"></div>
+        <div style="padding: 0 16px 4px;">
+          <div class="game-tabs">
+            <button class="game-tab active" id="tab-quiz" onclick="switchGame('quiz')">🧪 Quiz</button>
+            <button class="game-tab" id="tab-memory" onclick="switchGame('memory')">🎴 Memory</button>
+          </div>
+        </div>
+
+        <div id="quiz-game">
+          <div class="quiz-score-row">
+            <span class="quiz-score" id="quiz-score-label">Punkte: 0</span>
+            <span class="quiz-q-num" id="quiz-q-label">Frage 1 / 8</span>
+          </div>
+          <div class="quiz-progress-bar-bg">
+            <div class="quiz-progress-bar-fill" id="quiz-progress" style="width:12.5%"></div>
+          </div>
+          <div class="question-card">
+            <div class="question-emoji" id="q-emoji">❓</div>
+            <div class="question-text" id="q-text">Lade...</div>
+          </div>
+          <div class="answers-grid" id="answers-grid"></div>
+          <button class="next-btn" id="next-btn" onclick="nextQuestion()">Nächste Frage →</button>
+        </div>
+        <div class="quiz-result" id="quiz-result">
+          <div class="result-emoji" id="result-emoji">🏆</div>
+          <div class="result-title">Super gemacht!</div>
+          <div class="result-score" id="result-score"></div>
+          <button class="restart-btn" onclick="startQuiz()">Nochmal spielen 🔄</button>
+        
+        <div id="memory-section" class="memory-section" style="display:none">
+          <div class="memory-stats">
+            <div class="memory-stat">Züge: <span id="m-moves">0</span></div>
+            <div class="memory-stat">Paare: <span id="m-pairs">0</span>/8</div>
+          </div>
+          <div class="memory-grid" id="memory-grid"></div>
+          <div class="mem-win" id="mem-win">
+            <div class="mem-win-emoji">🏆</div>
+            <div class="mem-win-title">Gewonnen!</div>
+            <div class="mem-win-sub" id="mem-win-sub"></div>
+            <button class="mem-restart" onclick="startMemory()">Nochmal spielen 🔄</button>
+          </div>
+          <button class="mem-restart" id="mem-restart-btn" onclick="startMemory()">Neu mischen 🔀</button>
+        </div>
+</div>
+      </div>
+    </div>
+    <div class="ad-banner">Werbung · kindgerecht &amp; DSGVO-konform &nbsp;|&nbsp; <a onclick="showLegal('impressum')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Impressum</a> &nbsp;·&nbsp; <a onclick="showLegal('datenschutz')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Datenschutz</a></div>
+    <div class="tabbar">
+      <button class="tab-item" onclick="goTo('home')"><div class="tab-icon">🏠</div><span class="tab-label">Start</span></button>
+      <button class="tab-item" onclick="goTo('periodensystem')"><div class="tab-icon">⚗️</div><span class="tab-label">Elemente</span></button>
+      <button class="tab-item active" onclick="goTo('quiz')"><div class="tab-icon">🎮</div><span class="tab-label">Quiz</span></button>
+      <button class="tab-item" onclick="goTo('fakten')"><div class="tab-icon">💡</div><span class="tab-label">Fakten</span></button>
+    </div>
+  </div>
+
+  <!-- ════════════════════ FAKTEN ════════════════════ -->
+  <div class="screen" id="screen-fakten">
+    <div class="topbar">
+      <div class="topbar-row">
+        <button class="icon-btn" onclick="goTo('home')">←</button>
+        <h1>Chemie-Fakten</h1>
+      </div>
+    </div>
+    <div class="scroll-area">
+      <div class="fakten-list" id="fakten-list"></div>
+    </div>
+    <div class="ad-banner">Werbung · kindgerecht &amp; DSGVO-konform &nbsp;|&nbsp; <a onclick="showLegal('impressum')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Impressum</a> &nbsp;·&nbsp; <a onclick="showLegal('datenschutz')" style="color:#7F77DD;text-decoration:none;font-weight:700;cursor:pointer">Datenschutz</a></div>
+    <div class="tabbar">
+      <button class="tab-item" onclick="goTo('home')"><div class="tab-icon">🏠</div><span class="tab-label">Start</span></button>
+      <button class="tab-item" onclick="goTo('periodensystem')"><div class="tab-icon">⚗️</div><span class="tab-label">Elemente</span></button>
+      <button class="tab-item" onclick="goTo('quiz')"><div class="tab-icon">🎮</div><span class="tab-label">Quiz</span></button>
+      <button class="tab-item active" onclick="goTo('fakten')"><div class="tab-icon">💡</div><span class="tab-label">Fakten</span></button>
+    </div>
+  </div>
+
+  <!-- ════════════════════ OVERLAYS ════════════════════ -->
+  <!-- Element Detail -->
+  <div class="overlay" id="overlay-el" onclick="closeOverlay('overlay-el', event)">
+    <div class="detail-sheet">
+      <div class="sheet-handle"></div>
+      <div class="detail-badge-row">
+        <div class="detail-el-badge" id="d-badge">
+          <span class="d-num" id="d-num"></span>
+          <span class="d-sym" id="d-sym"></span>
+        </div>
+        <div class="detail-el-info">
+          <h2 id="d-name"></h2>
+          <p id="d-kat"></p>
+        </div>
+      </div>
+      <div class="fact-row"><h4>Wo findet man es?</h4><p id="d-wo"></p></div>
+      <div class="fact-row"><h4>Fun-Fakt für Kinder 🎉</h4><p id="d-fakt"></p></div>
+      <div class="fact-row"><h4>Interessant zu wissen</h4><p id="d-extra"></p></div>
+      <button class="close-sheet-btn" onclick="document.getElementById('overlay-el').classList.remove('show')">Schließen ✓</button>
+    </div>
+  </div>
+
+  <!-- Experiment Detail -->
+  <div class="overlay" id="overlay-exp" onclick="closeOverlay('overlay-exp', event)">
+    <div class="detail-sheet">
+      <div class="sheet-handle"></div>
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:52px" id="exp-d-icon"></div>
+        <h2 style="font-size:20px;font-weight:800;margin-top:8px" id="exp-d-title"></h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:4px" id="exp-d-desc"></p>
+      </div>
+      <div class="fact-row" style="margin-bottom:14px"><h4>Was passiert dabei?</h4><p id="exp-d-erkl"></p></div>
+      <h4 style="font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Schritt für Schritt</h4>
+      <div class="exp-steps" id="exp-d-steps"></div>
+      <button class="close-sheet-btn" onclick="document.getElementById('overlay-exp').classList.remove('show')">Schließen ✓</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════ DATA ════════════
+
+const ELEMENTS = [
+  {num:1,sym:'H',name:'Wasserstoff',kat:'nichtmetal',katName:'Nichtmetall',wo:'In Wasser (H₂O) und der Luft!',fakt:'Wasserstoff ist das leichteste Element der Welt — leichter als Luft! Früher füllte man Luftschiffe damit.',extra:'Das Symbol H kommt vom lateinischen Wort „Hydrogenium" — das bedeutet „Wassererzeuger".'},
+  {num:2,sym:'He',name:'Helium',kat:'edelgas',katName:'Edelgas',wo:'In Luftballons und der Sonne!',fakt:'Helium lässt Luftballons fliegen und macht die Stimme lustig piepsig, wenn man es einatmet!',extra:'Helium wurde zuerst in der Sonne entdeckt, bevor man es auf der Erde fand!'},
+  {num:3,sym:'Li',name:'Lithium',kat:'metall',katName:'Metall',wo:'In Handy-Akkus und Laptops!',fakt:'Dein Handy lädt dank Lithium — es steckt im Akku und speichert die Energie.',extra:'Lithium ist so leicht, dass es auf Wasser schwimmt!'},
+  {num:4,sym:'Be',name:'Beryllium',kat:'metall',katName:'Metall',wo:'In manchen Edelsteinen wie Smaragd!',fakt:'Smaragde sind grüne Edelsteine — ihr grüne Farbe kommt von Spuren von Beryllium!',extra:'Beryllium ist leichter als Aluminium aber trotzdem sehr stabil.'},
+  {num:5,sym:'B',name:'Bor',kat:'halbmetal',katName:'Halbmetall',wo:'In Waschpulver und Glasfasern!',fakt:'Bor steckt in Waschmittel und macht Glas besonders hitzebeständig!',extra:'Borosilikatglas in Backformen enthält Bor — deshalb zerspringt es nicht bei Hitze.'},
+  {num:6,sym:'C',name:'Kohlenstoff',kat:'nichtmetal',katName:'Nichtmetall',wo:'In allen Lebewesen — auch in dir!',fakt:'Alle Lebewesen bestehen aus Kohlenstoff. Und Diamanten sind reiner Kohlenstoff — der härteste Stoff der Welt!',extra:'Bleistifte enthalten kein Blei, sondern Graphit — das ist auch reiner Kohlenstoff!'},
+  {num:7,sym:'N',name:'Stickstoff',kat:'nichtmetal',katName:'Nichtmetall',wo:'In der Luft — fast überall!',fakt:'78% der Luft, die du einatmest, ist Stickstoff. Fast alles was du atmest, ist Stickstoff!',extra:'Flüssiger Stickstoff ist extrem kalt (-196°C) und lässt Dinge sofort einfrieren.'},
+  {num:8,sym:'O',name:'Sauerstoff',kat:'nichtmetal',katName:'Nichtmetall',wo:'In der Luft und im Wasser!',fakt:'Ohne Sauerstoff kein Leben! Du atmest ihn jede Sekunde. Er macht 21% der Luft aus.',extra:'Sauerstoff lässt Dinge brennen — Feuer geht aus, wenn kein Sauerstoff mehr da ist.'},
+  {num:9,sym:'F',name:'Fluor',kat:'nichtmetal',katName:'Nichtmetall',wo:'In Zahnpasta!',fakt:'Fluor ist in deiner Zahnpasta und schützt deine Zähne vor Karies. Ohne Fluor mehr Löcher!',extra:'Fluor ist das reaktionsfreudigste Element — es verbindet sich mit fast allem.'},
+  {num:10,sym:'Ne',name:'Neon',kat:'edelgas',katName:'Edelgas',wo:'In Leuchtreklamen und Neonlichtern!',fakt:'Neon leuchtet orangerot in Leuchtreklamen — das ist echter Neon-Glanz an der Wand!',extra:'Neon ist sehr selten — die Luft enthält nur ganz wenig davon.'},
+  {num:11,sym:'Na',name:'Natrium',kat:'metall',katName:'Metall',wo:'Im Speisesalz (Kochsalz)!',fakt:'Kochsalz ist Natrium + Chlor zusammen. Ohne Salz würde dein Essen fade schmecken!',extra:'Reines Natrium reagiert heftig mit Wasser — es zischt und brennt!'},
+  {num:12,sym:'Mg',name:'Magnesium',kat:'metall',katName:'Metall',wo:'In Pflanzen, Nüssen und Schokolade!',fakt:'Pflanzen brauchen Magnesium für ihre grüne Farbe — es steckt im Blattgrün (Chlorophyll)!',extra:'Magnesium verbrennt mit einem blendend weißen Licht — wie ein Mini-Feuerwerk!'},
+  {num:13,sym:'Al',name:'Aluminium',kat:'metall',katName:'Metall',wo:'In Alufolie und Getränkedosen!',fakt:'Alufolie in deiner Küche besteht aus Aluminium — superdünn, superleicht und praktisch!',extra:'Aluminium ist das häufigste Metall auf der Erde und 100% recycelbar.'},
+  {num:14,sym:'Si',name:'Silizium',kat:'halbmetal',katName:'Halbmetall',wo:'In Sand und Computerchips!',fakt:'Silizium steckt in Computerchips — aus gewöhnlichem Sand wird modernste Technologie!',extra:'Das Silicon Valley heißt so wegen Silizium — dort werden Computerchips gebaut.'},
+  {num:15,sym:'P',name:'Phosphor',kat:'nichtmetal',katName:'Nichtmetall',wo:'In Streichhölzern und Dünger!',fakt:'Streichhölzer zünden wegen Phosphor! Weißer Phosphor kann sogar im Dunkeln leuchten.',extra:'Phosphor ist auch in deinen Knochen und Zähnen — er macht sie fest.'},
+  {num:16,sym:'S',name:'Schwefel',kat:'nichtmetal',katName:'Nichtmetall',wo:'In Vulkanen und Eiern!',fakt:'Vulkane stinken nach faulen Eiern — das ist Schwefel! Er ist gelb und riecht sehr stark.',extra:'Schwefel wird zum Vulkanisieren von Gummi verwendet — so werden Autoreifen gemacht!'},
+  {num:17,sym:'Cl',name:'Chlor',kat:'nichtmetal',katName:'Nichtmetall',wo:'Im Schwimmbad und Trinkwasser!',fakt:'Der typische Schwimmbad-Geruch kommt von Chlor — es tötet Bakterien und hält das Wasser sauber.',extra:'Zusammen mit Natrium bildet Chlor unser Kochsalz — NaCl.'},
+  {num:18,sym:'Ar',name:'Argon',kat:'edelgas',katName:'Edelgas',wo:'In Glühbirnen und Fenstern!',fakt:'Argon füllt viele Glühbirnen und Doppelfenster, damit sie besser isolieren!',extra:'Argon ist das häufigste Edelgas in der Luft — fast 1% der Luft ist Argon.'},
+  {num:19,sym:'K',name:'Kalium',kat:'metall',katName:'Metall',wo:'In Bananen und Kartoffeln!',fakt:'Bananen enthalten viel Kalium! Es ist wichtig für deine Muskeln und dein Herz.',extra:'Das Symbol K kommt vom lateinischen „Kalium" — Kalium ist lebenswichtig für uns.'},
+  {num:20,sym:'Ca',name:'Calcium',kat:'metall',katName:'Metall',wo:'In Milch, Käse und Knochen!',fakt:'Deine Knochen und Zähne bestehen hauptsächlich aus Calcium — deshalb ist Milch so gesund!',extra:'Kreide besteht aus Calciumcarbonat — das gleiche Material wie Muschelschalen.'},
+  {num:26,sym:'Fe',name:'Eisen',kat:'metall',katName:'Metall',wo:'In Nägeln, Brücken und Spinat!',fakt:'Eisen rostet, wenn es nass wird — das orangerote Zeug ist Eisenoxid. Spinat hat viel Eisen!',extra:'Das Blut ist rot wegen Eisen — Hämoglobin enthält Eisen und transportiert Sauerstoff.'},
+  {num:29,sym:'Cu',name:'Kupfer',kat:'metall',katName:'Metall',wo:'In Stromkabeln und Münzen!',fakt:'Kupfer leitet Strom super gut — deshalb steckt es in fast allen elektrischen Kabeln!',extra:'Die Freiheitsstatue ist aus Kupfer — deshalb ist sie grün (oxidiertes Kupfer).'},
+  {num:30,sym:'Zn',name:'Zink',kat:'metall',katName:'Metall',wo:'In Sonnencreme und Münzen!',fakt:'Zink schützt Metall vor Rost — Zäune und Brücken werden oft mit Zink beschichtet.',extra:'1-Cent-Münzen sind fast nur aus Zink, nur außen mit Kupfer beschichtet!'},
+  {num:47,sym:'Ag',name:'Silber',kat:'metall',katName:'Metall',wo:'In Schmuck, Münzen und Besteck!',fakt:'Silber glänzt wunderschön und tötet Bakterien — früher nutzte man Silberbesteck genau dafür!',extra:'Silber ist das Material mit der besten elektrischen Leitfähigkeit überhaupt.'},
+  {num:50,sym:'Sn',name:'Zinn',kat:'metall',katName:'Metall',wo:'In Konservendosen und Lötzinn!',fakt:'Konservendosen sind innen mit Zinn beschichtet — so bleibt das Essen länger frisch!',extra:'Lötzinn verbindet elektronische Bauteile — ohne Zinn kein Elektronik!'},
+  {num:79,sym:'Au',name:'Gold',kat:'metall',katName:'Metall',wo:'In Schmuck, Münzen und Computerchips!',fakt:'Gold rostet nie und glänzt für immer — deshalb ist es so wertvoll und beliebt!',extra:'Gold ist so weich, dass man es mit den Fingern verformen kann — reines Gold jedenfalls!'},
+  {num:80,sym:'Hg',name:'Quecksilber',kat:'metall',katName:'Metall',wo:'In alten Thermometern und Energiesparlampen!',fakt:'Quecksilber ist bei Zimmertemperatur flüssig — das einzige flüssige Metall! Es glänzt silbrig.',extra:'Quecksilber ist giftig — deshalb werden alte Thermometer nicht mehr benutzt.'},
+  {num:82,sym:'Pb',name:'Blei',kat:'metall',katName:'Metall',wo:'In Autobatterien und Schutzwesten!',fakt:'Blei ist superschwer und schützt gegen Strahlung — Röntgenschürzen beim Arzt enthalten Blei!',extra:'Bleistifte heißen so, weil man früher wirklich Blei zum Schreiben nutzte. Heute ist Graphit drin.'},
+  {num:83,sym:'Bi',name:'Bismut',kat:'metall',katName:'Metall',wo:'In Magenmitteln und Legierungen!',fakt:'Bismut bildet wunderschöne regenbogenfarbige Kristalle — wie aus einem Fantasy-Film!',extra:'Bismut wird in Magenmedikamenten wie Pepto-Bismol verwendet.'},
+];
+
+const EXPERIMENTS = [
+  {cls:'e1',icon:'🌋',title:'Vulkan im Glas',desc:'Backpulver + Essig = Explosion!',erkl:'Wenn Backpulver (Natriumhydrogencarbonat) auf Essig (Essigsäure) trifft, entsteht Kohlendioxid-Gas. Das Gas sprudelt aus der Mischung heraus — genau wie ein echter Vulkan!',steps:['Stelle ein Glas in eine Schüssel','Gib 3 Löffel Backpulver ins Glas','Füge etwas rote Lebensmittelfarbe hinzu','Gieße Essig dazu — und schau zu!','Passe auf: Es kann spritzen!']},
+  {cls:'e2',icon:'🌈',title:'Wasser geht bergauf',desc:'Tinte und Papier als Magie!',erkl:'Wasser klettert durch winzige Kanäle im Papier nach oben. Das nennt man Kapillarwirkung! Pflanzen nutzen dasselbe Prinzip, um Wasser von den Wurzeln zu den Blättern zu transportieren.',steps:['Schneide Küchenpapier in Streifen','Zeichne mit Filzstift einen dicken Strich unten hin','Stelle das Papier in etwas Wasser','Warte 5 Minuten','Die Farbe wandert nach oben — Magie!']},
+  {cls:'e3',icon:'🎈',title:'Luftballon ohne Pusten',desc:'Backpulver macht Luftballons groß!',erkl:'Backpulver und Essig reagieren und erzeugen Kohlendioxid-Gas. Das Gas steigt in den Luftballon und bläst ihn auf — ganz ohne pusten!',steps:['Fülle etwas Essig in eine Flasche','Gib Backpulver in einen Luftballon','Stülpe den Ballon über die Flasche','Kippe das Backpulver in die Flasche','Der Ballon bläst sich von alleine auf!']},
+  {cls:'e4',icon:'🥚',title:'Das tanzende Ei',desc:'Ein Ei, das im Wasser sinkt oder schwimmt!',erkl:'In normalem Wasser sinkt ein Ei. Wenn man aber viel Salz auflöst, wird das Wasser schwerer (dichter) als das Ei — und das Ei schwimmt! Das nennt man Dichte.',steps:['Fülle zwei Gläser mit Wasser','In ein Glas gibst du 6 Löffel Salz','Rühre gut um, bis das Salz weg ist','Lege je ein Ei in beide Gläser','Schau was passiert — ein Ei schwimmt!']},
+  {cls:'e5',icon:'🔴',title:'Rotkohl als Detektiv',desc:'Rotkohl verrät ob etwas sauer ist!',erkl:'Rotkohl enthält einen natürlichen Farbstoff der seine Farbe ändert, je nachdem ob etwas sauer oder basisch ist. Das nennt man einen Indikator! Essig ist sauer (wird rot), Backpulver ist basisch (wird grün).',steps:['Koche Rotkohl kurz in Wasser','Lass den lila Saft abkühlen','Fülle ihn in mehrere Gläser','Gib in jedes Glas etwas anderes: Essig, Backpulver, Zitrone, Seife','Schau wie die Farbe sich verändert!']},
+  {cls:'e6',icon:'🧊',title:'Eis mit Salz',desc:'Salz lässt Eis schmelzen und kühlen!',erkl:'Wenn Salz auf Eis trifft, senkt es den Gefrierpunkt. Das Eis schmilzt dadurch bei kälterer Temperatur. Die Umgebung wird dabei so kalt, dass man damit sogar Speiseeis machen kann!',steps:['Fülle einen Beutel mit Crushed Ice','Gib 6 Löffel Salz dazu','Mische Milch + Zucker + Vanille in kleinen Beutel','Lege den kleinen Beutel ins Eis','Knete 10 Minuten — fertig ist dein Eis!']},
+];
+
+const FAKTEN = [
+  {icon:'💧',cat:'alltag',catName:'Alltag',title:'Warum ist Wasser nass?',text:'Wasser besteht aus winzigen Molekülen, die sich an Oberflächen heften. Wenn Wasser deine Haut berührt, klammern sich diese Moleküle daran — das Gehirn interpretiert das als „nass"!'},
+  {icon:'🦷',cat:'koerper',catName:'Körper',title:'Warum werden Zähne gelb?',text:'Zähne haben eine weiße Schutzschicht namens Zahnschmelz. Wenn man viel Cola oder Süßes isst, greifen Säuren diese Schicht an. Deshalb ist Zähneputzen so wichtig!'},
+  {icon:'🍎',cat:'alltag',catName:'Alltag',title:'Warum werden Äpfel braun?',text:'Wenn du einen Apfel anbeißt, reagiert das Fruchtfleisch mit Sauerstoff aus der Luft. Diese Reaktion heißt Oxidation — dasselbe passiert, wenn Eisen rostet!'},
+  {icon:'🌿',cat:'natur',catName:'Natur',title:'Warum sind Pflanzen grün?',text:'Pflanzen haben einen Farbstoff namens Chlorophyll. Er ist grün und fängt Sonnenlicht ein. Mit diesem Licht machen Pflanzen aus Wasser und CO₂ ihr eigenes Essen — das nennt man Fotosynthese!'},
+  {icon:'⚡',cat:'technik',catName:'Technik',title:'Wie funktioniert ein Akku?',text:'In einem Akku fließen winzige Teilchen (Ionen) zwischen zwei verschiedenen Materialien hin und her. Dabei entsteht elektrische Energie. Wenn alle Ionen auf einer Seite sind — ist der Akku leer!'},
+  {icon:'🌊',cat:'natur',catName:'Natur',title:'Warum ist das Meer salzig?',text:'Flüsse spülen Mineralien aus Gesteinen ins Meer. Wasser verdunstet, aber das Salz bleibt zurück. Über Millionen von Jahren wurde das Meer immer salziger!'},
+  {icon:'🧁',cat:'alltag',catName:'Alltag',title:'Warum geht Kuchen auf?',text:'Backpulver im Teig enthält Natriumhydrogencarbonat. In der Hitze des Ofens entsteht Kohlendioxid-Gas. Die Gasbläschen lassen den Teig aufgehen — wie viele Mini-Luftballons!'},
+  {icon:'🌡️',cat:'natur',catName:'Natur',title:'Warum fühlt sich Metall kälter an?',text:'Metall leitet Wärme viel besser als Holz. Wenn du Metall anfasst, zieht es die Körperwärme schnell ab — deshalb fühlt es sich kalt an, auch wenn es dieselbe Temperatur hat!'},
+  {icon:'🫧',cat:'alltag',catName:'Alltag',title:'Warum macht Seife Schaum?',text:'Seifenmoleküle haben zwei Seiten: eine liebt Wasser, eine liebt Fett. Beim Reiben schließen sie Luft ein und bilden Blasen. Die Seifenmoleküle packen auch Schmutz und Fett ein!'},
+  {icon:'🩸',cat:'koerper',catName:'Körper',title:'Warum ist Blut rot?',text:'Blut enthält Millionen roter Blutkörperchen. Diese haben Hämoglobin — ein Protein mit Eisenatomen. Das Eisen verbindet sich mit Sauerstoff und das macht das Blut rot!'},
+  {icon:'🌈',cat:'natur',catName:'Natur',title:'Wie entsteht ein Regenbogen?',text:'Regentropfen wirken wie winzige Prismen. Wenn Sonnenlicht durch sie hindurchgeht, wird es in alle Farben aufgespalten: Rot, Orange, Gelb, Grün, Blau, Indigo, Violett!'},
+  {icon:'🔋',cat:'technik',catName:'Technik',title:'Warum erhitzt sich ein Handy?',text:'Wenn der Prozessor rechnet, fließt Strom durch winzige Leitungen. Dabei entsteht Wärme — genau wie beim Händereiben. Je mehr das Handy rechnet, desto wärmer wird es!'},
+];
+
+// ════════════ QUIZ QUESTIONS ════════════
+const QUESTIONS = [
+  {emoji:'💧',text:'Aus welchen Elementen besteht Wasser?',answers:['Wasserstoff und Sauerstoff','Kohlenstoff und Stickstoff','Natrium und Chlor','Eisen und Kupfer'],correct:0},
+  {emoji:'🌬️',text:'Was macht 78% der Luft aus?',answers:['Sauerstoff','Kohlendioxid','Stickstoff','Helium'],correct:2},
+  {emoji:'🧂',text:'Aus welchen Elementen besteht Kochsalz?',answers:['Calcium und Phosphor','Natrium und Chlor','Eisen und Zink','Kalium und Jod'],correct:1},
+  {emoji:'💎',text:'Woraus bestehen Diamanten?',answers:['Silber','Silizium','Kohlenstoff','Aluminium'],correct:2},
+  {emoji:'🌱',text:'Welches Element macht Pflanzen grün?',answers:['Stickstoff','Sauerstoff','Eisen','Magnesium'],correct:3},
+  {emoji:'🔋',text:'Welches Element steckt in Handy-Akkus?',answers:['Gold','Lithium','Kupfer','Zink'],correct:1},
+  {emoji:'🦷',text:'Welches Element schützt deine Zähne?',answers:['Calcium','Phosphor','Fluor','Natrium'],correct:2},
+  {emoji:'⚡',text:'Welches Element leitet Strom am besten?',answers:['Eisen','Aluminium','Gold','Kupfer'],correct:3},
+];
+
+// ════════════ NAVIGATION ════════════
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  if(screen === 'quiz') startQuiz();
+}
+
+// ════════════ BUILD ELEMENTS ════════════
+const bgMap = {nichtmetal:'#E1F5EE',metall:'#EEEDFE',edelgas:'#FAECE7',halbmetal:'#FAEEDA'};
+const colMap = {nichtmetal:'#085041',metall:'#3C3489',edelgas:'#4A1B0C',halbmetal:'#412402'};
+
+function buildElements() {
+  const grid = document.getElementById('elements-grid');
+  ELEMENTS.forEach(el => {
+    const div = document.createElement('div');
+    div.className = `el ${el.kat}`;
+    div.dataset.kat = el.kat;
+    div.innerHTML = `<div class="e-num">${el.num}</div><div class="e-sym">${el.sym}</div><div class="e-name">${el.name}</div>`;
+    div.onclick = () => openEl(el);
+    grid.appendChild(div);
+  });
+}
+
+function filterEl(kat, btn) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.el').forEach(el => {
+    if(kat === 'all' || el.dataset.kat === kat) el.classList.remove('hidden');
+    else el.classList.add('hidden');
+  });
+}
+
+function openEl(el) {
+  document.getElementById('d-num').textContent = el.num;
+  document.getElementById('d-sym').textContent = el.sym;
+  document.getElementById('d-name').textContent = el.name;
+  document.getElementById('d-kat').textContent = el.katName;
+  document.getElementById('d-wo').textContent = el.wo;
+  document.getElementById('d-fakt').textContent = el.fakt;
+  document.getElementById('d-extra').textContent = el.extra;
+  const badge = document.getElementById('d-badge');
+  badge.style.background = bgMap[el.kat];
+  badge.querySelector('.d-num').style.color = colMap[el.kat];
+  badge.querySelector('.d-sym').style.color = colMap[el.kat];
+  document.getElementById('overlay-el').classList.add('show');
+}
+
+// ════════════ BUILD EXPERIMENTS ════════════
+function buildExperiments() {
+  const list = document.getElementById('exp-list');
+  EXPERIMENTS.forEach(exp => {
+    const div = document.createElement('div');
+    div.className = `exp-card ${exp.cls}`;
+    div.innerHTML = `<div class="exp-icon">${exp.icon}</div><div class="exp-info"><h3>${exp.title}</h3><p>${exp.desc}</p></div><div class="exp-arrow">›</div>`;
+    div.onclick = () => openExp(exp);
+    list.appendChild(div);
+  });
+}
+
+function openExp(exp) {
+  document.getElementById('exp-d-icon').textContent = exp.icon;
+  document.getElementById('exp-d-title').textContent = exp.title;
+  document.getElementById('exp-d-desc').textContent = exp.desc;
+  document.getElementById('exp-d-erkl').textContent = exp.erkl;
+  const stepsDiv = document.getElementById('exp-d-steps');
+  stepsDiv.innerHTML = '';
+  exp.steps.forEach((step, i) => {
+    stepsDiv.innerHTML += `<div class="step-item"><div class="step-num">${i+1}</div><div class="step-text">${step}</div></div>`;
+  });
+  document.getElementById('overlay-exp').classList.add('show');
+}
+
+// ════════════ BUILD FAKTEN ════════════
+function buildFakten() {
+  const list = document.getElementById('fakten-list');
+  FAKTEN.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'fakt-card';
+    div.innerHTML = `<div class="fakt-top"><div class="fakt-icon">${f.icon}</div><span class="fakt-cat ${f.cat}">${f.catName}</span></div><h3>${f.title}</h3><p>${f.text}</p>`;
+    list.appendChild(div);
+  });
+}
+
+// ════════════ QUIZ ════════════
+let qIndex = 0, score = 0, answered = false, shuffled = [];
+
+function startQuiz() {
+  shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
+  qIndex = 0; score = 0; answered = false;
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('quiz-game').style.display = 'block';
+  document.getElementById('next-btn').classList.remove('show');
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = shuffled[qIndex];
+  document.getElementById('q-emoji').textContent = q.emoji;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('quiz-score-label').textContent = `Punkte: ${score}`;
+  document.getElementById('quiz-q-label').textContent = `Frage ${qIndex+1} / ${shuffled.length}`;
+  document.getElementById('quiz-progress').style.width = ((qIndex+1)/shuffled.length*100) + '%';
+  const grid = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.answers.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span class="answer-letter">${letters[i]}</span>${ans}`;
+    btn.onclick = () => checkAnswer(i, q.correct);
+    grid.appendChild(btn);
+  });
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function checkAnswer(chosen, correct) {
+  if(answered) return;
+  answered = true;
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((btn, i) => {
+    if(i === correct) btn.classList.add('correct');
+    else if(i === chosen) btn.classList.add('wrong');
+    btn.style.pointerEvents = 'none';
+  });
+  if(chosen === correct) score++;
+  document.getElementById('quiz-score-label').textContent = `Punkte: ${score}`;
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  qIndex++;
+  if(qIndex >= shuffled.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-game').style.display = 'none';
+  const result = document.getElementById('quiz-result');
+  result.classList.add('show');
+  const pct = score / shuffled.length;
+  document.getElementById('result-emoji').textContent = pct >= 0.8 ? '🏆' : pct >= 0.5 ? '⭐' : '💪';
+  document.getElementById('result-score').textContent = `${score} von ${shuffled.length} richtig!`;
+}
+
+// ════════════ OVERLAY ════════════
+function closeOverlay(id, e) {
+  if(e.target.id === id) document.getElementById(id).classList.remove('show');
+}
+
+
+// ════════════ MEMORY GAME ════════════
+const MEM_PAIRS = [
+  {sym:'H', name:'Wasserstoff', emoji:'💧'},
+  {sym:'O', name:'Sauerstoff', emoji:'🌬️'},
+  {sym:'C', name:'Kohlenstoff', emoji:'💎'},
+  {sym:'Fe', name:'Eisen', emoji:'⚙️'},
+  {sym:'Au', name:'Gold', emoji:'✨'},
+  {sym:'Na', name:'Natrium', emoji:'🧂'},
+  {sym:'He', name:'Helium', emoji:'🎈'},
+  {sym:'Cu', name:'Kupfer', emoji:'⚡'},
+];
+let mFlipped=[], mMatched=0, mMoves=0, mLocked=false;
+
+function switchGame(type) {
+  document.getElementById('tab-quiz').classList.toggle('active', type==='quiz');
+  document.getElementById('tab-memory').classList.toggle('active', type==='memory');
+  document.getElementById('quiz-game').style.display = type==='quiz' ? 'block' : 'none';
+  document.getElementById('quiz-result').style.display = type==='quiz' ? '' : 'none';
+  document.getElementById('memory-section').style.display = type==='memory' ? 'block' : 'none';
+  if(type==='memory') startMemory();
+}
+
+function startMemory() {
+  mFlipped=[]; mMatched=0; mMoves=0; mLocked=false;
+  document.getElementById('m-moves').textContent=0;
+  document.getElementById('m-pairs').textContent=0;
+  document.getElementById('mem-win').classList.remove('show');
+  document.getElementById('mem-restart-btn').style.display='block';
+  const cards=[];
+  MEM_PAIRS.forEach(p=>{
+    cards.push({id:p.sym+'-sym',pairId:p.sym,emoji:p.emoji,label:p.sym});
+    cards.push({id:p.sym+'-name',pairId:p.sym,emoji:p.emoji,label:p.name});
+  });
+  cards.sort(()=>Math.random()-0.5);
+  const grid=document.getElementById('memory-grid');
+  grid.innerHTML='';
+  cards.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='mem-card';
+    div.dataset.id=c.id;
+    div.dataset.pair=c.pairId;
+    div.innerHTML=`<div class="mem-card-inner"><div class="mem-front"><span class="mem-front-icon">⚗️</span></div><div class="mem-back"><div class="m-emoji">${c.emoji}</div><div class="m-label">${c.label}</div></div></div>`;
+    div.onclick=()=>flipMemCard(div);
+    grid.appendChild(div);
+  });
+}
+
+function flipMemCard(card) {
+  if(mLocked||card.classList.contains('flipped')||card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  mFlipped.push(card);
+  if(mFlipped.length===2){
+    mLocked=true; mMoves++;
+    document.getElementById('m-moves').textContent=mMoves;
+    const [a,b]=mFlipped;
+    if(a.dataset.pair===b.dataset.pair&&a.dataset.id!==b.dataset.id){
+      a.classList.add('matched'); b.classList.add('matched');
+      mMatched++; document.getElementById('m-pairs').textContent=mMatched;
+      mFlipped=[]; mLocked=false;
+      if(mMatched===MEM_PAIRS.length){
+        setTimeout(()=>{
+          document.getElementById('mem-win-sub').textContent=mMatched+' Paare in '+mMoves+' Zügen!';
+          document.getElementById('mem-win').classList.add('show');
+          document.getElementById('mem-restart-btn').style.display='none';
+        },500);
+      }
+    } else {
+      setTimeout(()=>{
+        a.classList.remove('flipped'); b.classList.remove('flipped');
+        mFlipped=[]; mLocked=false;
+      },1000);
+    }
+  }
+}
+
+// ════════════ INIT ════════════
+buildElements();
+buildExperiments();
+buildFakten();
+</script>
+
+<!-- ════════════ COOKIE BANNER ════════════ -->
+<style>
+.cookie-banner {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #1e1a3c; color: #fff;
+  padding: 16px 20px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+}
+.cookie-banner p { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.9); }
+.cookie-banner a { color: #AFA9EC; text-decoration: underline; cursor: pointer; }
+.cookie-btns { display: flex; gap: 10px; }
+.cookie-accept {
+  flex: 1; padding: 11px; background: #7F77DD;
+  border: none; border-radius: 50px; color: #fff;
+  font-size: 14px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+.cookie-decline {
+  flex: 1; padding: 11px; background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.3); border-radius: 50px; color: #fff;
+  font-size: 14px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Legal Overlay */
+.legal-overlay {
+  position: fixed; inset: 0; background: rgba(30,26,60,0.7);
+  z-index: 9998; display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.legal-overlay.show { display: flex; }
+.legal-sheet {
+  background: #fff; border-radius: 28px 28px 0 0;
+  padding: 24px 22px 48px; width: 100%; max-width: 430px;
+  max-height: 85dvh; overflow-y: auto;
+  font-family: 'Nunito', sans-serif;
+}
+.legal-sheet h2 { font-size: 20px; font-weight: 800; color: #1e1a3c; margin-bottom: 16px; }
+.legal-sheet h3 { font-size: 15px; font-weight: 800; color: #1e1a3c; margin: 16px 0 6px; }
+.legal-sheet p { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 8px; }
+.legal-sheet a { color: #7F77DD; }
+.legal-handle { width: 36px; height: 4px; background: #e2deff; border-radius: 50px; margin: 0 auto 20px; }
+.legal-close {
+  width: 100%; padding: 14px; margin-top: 16px;
+  background: linear-gradient(135deg, #7F77DD, #534AB7);
+  border: none; border-radius: 50px; color: #fff;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Footer Links */
+.legal-footer {
+  text-align: center; padding: 12px;
+  font-size: 11px; color: #64748b;
+  font-family: 'Nunito', sans-serif;
+  background: #fff; border-top: 0.5px solid #e2deff;
+}
+.legal-footer a { color: #7F77DD; text-decoration: none; margin: 0 8px; font-weight: 700; cursor: pointer; }
+</style>
+
+<!-- Cookie Banner HTML -->
+<div id="cookie-banner" class="cookie-banner">
+  <p>🍪 Diese Website verwendet Cookies für Werbung (Google AdSense). <a onclick="showLegal('datenschutz')">Datenschutzerklärung</a></p>
+  <div class="cookie-btns">
+    <button class="cookie-accept" onclick="acceptCookies()">Alle akzeptieren ✓</button>
+    <button class="cookie-decline" onclick="declineCookies()">Ablehnen</button>
+  </div>
+</div>
+
+<!-- Impressum Overlay -->
+<div class="legal-overlay" id="overlay-impressum" onclick="closeLegal('impressum', event)">
+  <div class="legal-sheet">
+    <div class="legal-handle"></div>
+    <h2>Impressum</h2>
+    <h3>Angaben gemäß § 5 TMG</h3>
+    <p>Otmane Fakhri<br>Bachstelzenweg 2B<br>65929 Frankfurt am Main<br>Deutschland</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: otmane.fakhri10@gmail.com</p>
+    <h3>Verantwortlich für den Inhalt</h3>
+    <p>Otmane Fakhri (Anschrift wie oben)</p>
+    <h3>Haftungsausschluss</h3>
+    <p>Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.</p>
+    <h3>Urheberrecht</h3>
+    <p>Die durch den Seitenbetreiber erstellten Inhalte und Werke auf dieser Website unterliegen dem deutschen Urheberrecht.</p>
+    <button class="legal-close" onclick="document.getElementById('overlay-impressum').classList.remove('show')">Schließen ✓</button>
+  </div>
+</div>
+
+<!-- Datenschutz Overlay -->
+<div class="legal-overlay" id="overlay-datenschutz" onclick="closeLegal('datenschutz', event)">
+  <div class="legal-sheet">
+    <div class="legal-handle"></div>
+    <h2>Datenschutzerklärung</h2>
+    <h3>1. Verantwortlicher</h3>
+    <p>Otmane Fakhri, Bachstelzenweg 2B, 65929 Frankfurt am Main<br>E-Mail: otmane.fakhri10@gmail.com</p>
+    <h3>2. Welche Daten wir erheben</h3>
+    <p>Diese Website erhebt keine personenbezogenen Daten direkt. Es werden keine Nutzerkonten angelegt und keine persönlichen Informationen gespeichert.</p>
+    <h3>3. Google AdSense</h3>
+    <p>Wir nutzen Google AdSense zur Anzeige von Werbung. Google AdSense verwendet Cookies, um personalisierte Werbung anzuzeigen. Anbieter: Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
+    <p>Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank">Google Datenschutzerklärung</a></p>
+    <h3>4. Kinder</h3>
+    <p>Diese App richtet sich an Kinder ab 8 Jahren. Wir erheben bewusst keine personenbezogenen Daten von Kindern. Google AdSense ist auf kindgerechte Inhalte eingestellt (COPPA-konform).</p>
+    <h3>5. Ihre Rechte (DSGVO)</h3>
+    <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer Daten. Kontakt: otmane.fakhri10@gmail.com</p>
+    <h3>6. Hosting</h3>
+    <p>Diese Website wird über GitHub Pages (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet.</p>
+    <button class="legal-close" onclick="document.getElementById('overlay-datenschutz').classList.remove('show')">Schließen ✓</button>
+  </div>
+</div>
+
+<!-- Legal Footer -->
+<div class="legal-footer" id="legal-footer">
+  <a onclick="showLegal('impressum')">Impressum</a>
+  <a onclick="showLegal('datenschutz')">Datenschutz</a>
+</div>
+
+<script>
+function acceptCookies() {
+  try { localStorage.setItem('cookies', 'accepted'); } catch(e) {}
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+function declineCookies() {
+  try { localStorage.setItem('cookies', 'declined'); } catch(e) {}
+  document.getElementById('cookie-banner').style.display = 'none';
+}
+function showLegal(type) {
+  document.getElementById('overlay-' + type).classList.add('show');
+}
+function closeLegal(type, e) {
+  if(e.target.id === 'overlay-' + type) document.getElementById('overlay-' + type).classList.remove('show');
+}
+// Check cookie consent on load - only hide if explicitly set
+window.addEventListener('load', function() {
+  try {
+    const consent = localStorage.getItem('cookies');
+    if(consent === 'accepted' || consent === 'declined') {
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+  } catch(e) {
+    // localStorage not available - keep banner visible
+  }
+});
+</script>
+</body>
+</html>
