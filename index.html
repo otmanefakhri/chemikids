@@ -926,9 +926,9 @@ let qIndex = 0, score = 0, answered = false, shuffled = [];
 function startQuiz() {
   shuffled = [...QUESTIONS].sort(() => Math.random() - 0.5);
   qIndex = 0; score = 0; answered = false;
-  document.getElementById('quiz-result').classList.remove('show');
-  document.getElementById('quiz-game').style.display = 'block';
-  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('quiz-result').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  document.getElementById('next-btn').style.display = 'none';
   showQuestion();
 }
 
@@ -950,7 +950,7 @@ function showQuestion() {
     btn.onclick = () => checkAnswer(i, q.correct);
     grid.appendChild(btn);
   });
-  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('next-btn').style.display = 'none';
 }
 
 function checkAnswer(chosen, correct) {
@@ -964,7 +964,7 @@ function checkAnswer(chosen, correct) {
   });
   if(chosen === correct) score++;
   document.getElementById('quiz-score-label').textContent = `Punkte: ${score}`;
-  document.getElementById('next-btn').classList.add('show');
+  document.getElementById('next-btn').style.display = 'block';
 }
 
 function nextQuestion() {
@@ -977,9 +977,8 @@ function nextQuestion() {
 }
 
 function showResult() {
-  document.getElementById('quiz-game').style.display = 'none';
-  const result = document.getElementById('quiz-result');
-  result.classList.add('show');
+  document.getElementById('quiz-section').style.display = 'none';
+  document.getElementById('quiz-result').style.display = 'block';
   const pct = score / shuffled.length;
   document.getElementById('result-emoji').textContent = pct >= 0.8 ? '🏆' : pct >= 0.5 ? '⭐' : '💪';
   document.getElementById('result-score').textContent = `${score} von ${shuffled.length} richtig!`;
